@@ -9,7 +9,10 @@
   <input type="text" v-bind:class="{ invalid: isEmailInvalid }" id="email" name="email" v-model="inputs.email"><br>
   <button type="button" v-on:click="submit">{{labels.submit}}</button>
 </form> 
-  </div>
+<div v-bind:class="{ showModal: true }">
+<h1> Thank You! </h1>
+</div>
+ </div>
 </template>
 
 <script>
@@ -29,14 +32,34 @@ module.exports = {
       },
       isFNInvalid: false,
       isLNInvalid: false,
-      isEmailInvalid: false
+      isEmailInvalid: false,
+      hasReturnedOk: false
     }
   },
   methods: {
     submit: function() {
+      this.validate();
+      if (!this.isFNInvalid && !this.isLNInvalid && !this.isEmailInvalid) {
+        this.hitEndpoint();
+      }
+
+
+    },
+
+    validate: function() {
       this.inputs.fName === null || this.inputs.fName === "" ? this.isFNInvalid = true: this.isFNInvalid = false;
       this.inputs.lName === null || this.inputs.lName === "" ? this.isLNInvalid = true: this.isLNInvalid = false;
       this.inputs.email === null || this.inputs.email === ""? this.isEmailInvalid = true: this.isEmailInvalid = false;
+    },
+
+    hitEndpoint: function() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://reqres.in/api/products/3", true);
+      xhr.onload = function(){
+        xhr.status === 200 ? this.hasReturnedOk = true: this.hasReturnedOk = false; 
+              console.log(this.hasReturnedOk, xhr.status === 200);
+      };
+      xhr.send();
     }
   }
 }
@@ -61,5 +84,11 @@ a {
 
 .invalid {
   border: 1px solid red;
+}
+
+.showModal {
+  display: block;
+  z-index: 1;
+  border: 1px solid #888;
 }
 </style>
