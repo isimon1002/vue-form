@@ -6,11 +6,13 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import Modal from './components/modal.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HelloWorld,
+    'Modal': Modal
   }
 }
 </script>

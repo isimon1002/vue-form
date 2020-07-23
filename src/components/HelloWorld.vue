@@ -12,6 +12,7 @@
 <div v-bind:class="{ showModal: true }">
 <h1> Thank You! </h1>
 </div>
+ <modal></modal>
  </div>
 </template>
 
