@@ -9,10 +9,7 @@
   <input type="text" v-bind:class="{ invalid: isEmailInvalid }" id="email" name="email" v-model="inputs.email"><br>
   <button type="button" v-on:click="submit">{{labels.submit}}</button>
 </form> 
-<div v-bind:class="{ showModal: true }">
-<h1> Thank You! </h1>
-</div>
- <modal></modal>
+ <modal v-bind:shouldDisplayModal='this.hasReturnedOk'></modal>
  </div>
 </template>
 
@@ -57,10 +54,12 @@ module.exports = {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", "https://reqres.in/api/products/3", true);
       xhr.onload = function(){
-        xhr.status === 200 ? this.hasReturnedOk = true: this.hasReturnedOk = false; 
-              console.log(this.hasReturnedOk, xhr.status === 200);
+        if (xhr.status === 200 ) {
+          this.hasReturnedOk = true;
+        }
       };
       xhr.send();
+      this.hasReturnedOk = true;
     }
   }
 }
