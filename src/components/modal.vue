@@ -1,7 +1,7 @@
 <template lang="html">
 
 <!-- The Modal -->
-<div id="myModal" class="modal" v-bind:class="{ hideModal: !shouldDisplayModal}" >
+<div id="myModal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
@@ -23,12 +23,13 @@
     },
     data () {
       return {
+        displayModal: true
 
       }
     },
     methods: {
       close: function() {
-        this.shouldDisplayModal = false;
+        this.$emit('childToParent')
       }
 
     },

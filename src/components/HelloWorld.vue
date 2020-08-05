@@ -9,12 +9,14 @@
   <input type="text" v-bind:class="{ invalid: isEmailInvalid }" id="email" name="email" v-model="inputs.email"><br>
   <button type="button" v-on:click="submit">{{labels.submit}}</button>
 </form> 
- <modal v-bind:shouldDisplayModal='this.hasReturnedOk'></modal>
+ <modal v-on:childToParent="onCloseModal" v-if="this.hasReturnedOk && !hasChildClosedModal"></modal>
  </div>
 </template>
 
 <script>
-module.exports = {
+import axios from "axios";
+
+export default {
   data: function() {
     return {
       labels: {
@@ -31,7 +33,8 @@ module.exports = {
       isFNInvalid: false,
       isLNInvalid: false,
       isEmailInvalid: false,
-      hasReturnedOk: false
+      hasReturnedOk: false,
+      hasChildClosedModal: false
     }
   },
   methods: {
@@ -39,6 +42,7 @@ module.exports = {
       this.validate();
       if (!this.isFNInvalid && !this.isLNInvalid && !this.isEmailInvalid) {
         this.hitEndpoint();
+        this.hasChildClosedModal = false;
       }
 
 
@@ -51,15 +55,12 @@ module.exports = {
     },
 
     hitEndpoint: function() {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", "https://reqres.in/api/products/3", true);
-      xhr.onload = function(){
-        if (xhr.status === 200 ) {
-          this.hasReturnedOk = true;
-        }
-      };
-      xhr.send();
-      this.hasReturnedOk = true;
+      axios.get("https://reqres.in/api/products/3")
+      .then(response => this.hasReturnedOk = response.status === 200);
+    },
+
+    onCloseModal: function() {
+      this.hasChildClosedModal = true;
     }
   }
 }
